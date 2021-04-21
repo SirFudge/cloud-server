@@ -33,7 +33,8 @@ ssl_ciphers=HIGH" /etc/vsftpd.conf
 #Disable anominous acces fpt/sftp
 sed 's/anonymous_enable=YES/anonymous_enable=NO/g' /etc/vsftpd.conf
 
-#restart services
+#restart/start services
 systemctl restart vsftpd
+systemctl start nginx
 
 #Firewall enable and rules
