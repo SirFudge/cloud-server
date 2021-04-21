@@ -38,3 +38,9 @@ systemctl restart vsftpd
 systemctl start nginx
 
 #Firewall enable and rules
+
+#Final message
+echo "All application have been installed and the basic security configurations have been set, the script will now stop."
+ 
+#Exit the script
+exit 0
