@@ -23,25 +23,25 @@ apt install mariadb-server -y
 #webserver installation choice.
 
 echo 'Choose a webserver, Apache or Nginx'
-read webserver
+read -r webserver
 
 #install Apache2 and certbot.
-if[ $webserver == 'apache']
+if [ "$webserver" == 'apache' ]
 then
 echo 'Installing Apache2.'
 apt install -y apache2
 apt install -y certbot
 apt install -y python3-certbot-apache
+fi
 
 #install Nginx and certbot.
-elif[ $webserver == 'nginx']
+if [ "$webserver" == 'nginx' ]
 then
 echo 'Installing Nginx.'
 apt install -y nginx
 apt install -y certbot
 apt install -y python3-certbot-nginx
-
-fl
+fi
 
 #Security (OpenSSH can be done at the installation of the OS)
 #setup tls sftp
