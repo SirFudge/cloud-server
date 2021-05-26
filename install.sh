@@ -69,6 +69,7 @@ pause 3
 
 echo 'Choose a installation directory'
 read directory
+mkdir $directory
 wget -O $directory/nextcloud.zip https://download.nextcloud.com/server/releases/nextcloud-21.0.1.zip
 unzip $directory/nextcloud.zip $directory/nextcloud/
 
