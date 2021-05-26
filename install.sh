@@ -28,18 +28,18 @@ read webserver
 #install Apache2 and certbot.
 if[ $webserver == 'apache']
 then
-echo 'Installing Apache2.'
-apt install -y apache2
-apt install -y certbot
-apt install -y python3-certbot-apache
+  echo 'Installing Apache2.'
+  apt install -y apache2
+  apt install -y certbot
+  apt install -y python3-certbot-apache
 
 #install Nginx and certbot.
 elif[ $webserver == 'nginx']
-then
-echo 'Installing Nginx.'
-apt install -y nginx
-apt install -y certbot
-apt install -y python3-certbot-nginx
+  then
+    echo 'Installing Nginx.'
+    apt install -y nginx
+    apt install -y certbot
+    apt install -y python3-certbot-nginx
 
 fl
 
@@ -80,7 +80,6 @@ systemctl start mariadb
 systemctl enable mariadb
 
 #Firewall enable and rules
-
 
 #Final message
 
