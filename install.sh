@@ -26,7 +26,7 @@ echo 'Choose a webserver, Apache or Nginx'
 read webserver
 
 #install Apache2 and certbot.
-if[ $webserver == 'apache']
+if[ $webserver == 'apache' ]
 then
 echo 'Installing Apache2.'
 apt install -y apache2
@@ -36,7 +36,7 @@ apt install -y python3-certbot-apache
 fl
 
 #install Nginx and certbot.
-elif[ $webserver == 'nginx']
+elif[ $webserver == 'nginx' ]
 then
 echo 'Installing Nginx.'
 apt install -y nginx
