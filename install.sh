@@ -11,9 +11,6 @@ echo 'welcome to the nextcloud all-in-one installation script.
 #update apt
 apt update -y
 
-#install unzip
-apt-get install -y unzip
-
 #install ftp/sftp
 echo 'Installing vsftpd for FTP and SFTP'
 apt install -y vsftpd
@@ -61,6 +58,9 @@ apt install -y certbot
 apt install -y python3-certbot-nginx
 
 fi
+
+#install unzip
+apt-get install -y unzip
 
 #install nextcloud
 echo 'Installation of NextCloud starting'
