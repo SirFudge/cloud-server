@@ -22,13 +22,10 @@ apt install mariadb-server -y
 
 #webserver installation choice.
 
-
-
 echo 'Choose a webserver, Apache or Nginx'
+sleep 3
 
 read -r webserver
-
-
 
 #install Apache2 and certbot.
 
@@ -46,8 +43,6 @@ apt install -y python3-certbot-apache
 
 fi
 
-
-
 #install Nginx and certbot.
 
 if [ "$webserver" == 'nginx' ]
@@ -63,14 +58,16 @@ apt install -y certbot
 apt install -y python3-certbot-nginx
 
 fi
+
 #install nextcloud
 echo 'Installation of NextCloud starting'
-pause 3
-
+sleep 3
 echo 'Choose a installation directory'
+
 read directory
 mkdir $directory
 wget -O $directory/nextcloud.zip https://download.nextcloud.com/server/releases/nextcloud-21.0.1.zip
+wait -n
 unzip $directory/nextcloud.zip $directory/nextcloud/
 
 
