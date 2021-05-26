@@ -71,7 +71,7 @@ read directory
 mkdir $directory
 wget -O $directory/nextcloud.zip https://download.nextcloud.com/server/releases/nextcloud-21.0.1.zip
 wait -n
-unzip $directory/nextcloud.zip $directory/nextcloud/
+unzip -d $directory/nextcloud.zip $directory/nextcloud/
 
 
 #Security (OpenSSH can be done at the installation of the OS)
