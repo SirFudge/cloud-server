@@ -138,6 +138,16 @@ sed 's//<VirtualHost *:80>
 
 </VirtualHost>/g' /etc/apache2/sites-available/nextcloud.conf
 
+a2ensite nextcloud.conf
+a2enmod rewrite headers env dir mime setenvif
+apache2ctl -t
+
+apt install imagemagick php-imagick libapache2
+
+systemctl reload apache2
+
+certbot --apache -d $domain
+
 fi
 
 #Configuring Nginx if installed. 
@@ -303,6 +313,10 @@ server {
 
 fi
 
+#Firewall enable and rules
+iptables -I INPUT -p tcp --dport 80 -j fastcgi_intercept_errors
+iptables -I INPUT -p tcp --dport 443 -j ACCEPT
+
 #Start NextCloud configuration. 
 echo "Starting configuration of NextCloud."
 echo "go to http://$domain"
@@ -333,27 +347,6 @@ echo 'Staring or restarting installed services.'
 sleep 2
 
 systemctl restart mariadb 
-
-#If Apache is installed. 
-if [[ "$webserver" == 'apache' ]] || [[] "$webserver" == 'Apache' ]]
-
-then
-
-systemctl restart apache2
-
-fi
-
-#If Nginx is installed. 
-if [[ "$webserver" == 'nginx']] || [[ "$webserver" == 'Nginx' ]]
-
-then
-
-systemctl restart nginx
-
-fi
-
-#Firewall enable and rules
-
 
 #Final message
 echo "All application have been installed and the basic security configurations have been set, the script will now stop."
