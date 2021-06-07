@@ -155,6 +155,8 @@ if [[ "$webserver" == 'nginx']] || [[ "$webserver" == 'Nginx' ]]
 
 then
 
+touch /etc/nginx/sites-available/nextcloud.conf
+
 sed 's//upstream php-handler {
     server 127.0.0.1:9000;
     #server unix:/var/run/php/php7.4-fpm.sock;
@@ -172,12 +174,12 @@ server {
 server {
     listen 443      ssl http2;
     listen [::]:443 ssl http2;
-    server_name cloud.example.com;
+    server_name '$domain';
 
     # Use Mozillas guidelines for SSL/TLS settings
     # https://mozilla.github.io/server-side-tls/ssl-config-generator/
-    ssl_certificate     /etc/ssl/nginx/cloud.example.com.crt;
-    ssl_certificate_key /etc/ssl/nginx/cloud.example.com.key;
+    ssl_certificate     /etc/letsencrypt/live/'$domain'/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/'$domain'/privkey.pem;
 
     # HSTS settings
     # WARNING: Only add the preload option once you read about
@@ -309,7 +311,13 @@ server {
     location / {
         try_files $uri $uri/ /index.php$request_uri;
     }
-}/g'
+}/g' /etc/nginx/sites-available/nextcloud.conf
+
+ln -s /etc/nginx/sites-available/nextcloud.conf
+
+certbot certonly --nginx -d $domain
+
+systemctl restart nginx
 
 fi
 
