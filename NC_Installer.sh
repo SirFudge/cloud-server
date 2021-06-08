@@ -105,15 +105,17 @@ sleep 6
 #restart MariaDB
 systemctl restart mariadb 
 
+#What should the domain be? 
+echo "What is the domain name you are going to be using?
+"
+read domain
+
 #Configuring apache if installed. 
 if [[ "$webserver" == 'apache']] || [[ "$webserver" == 'Apache' ]]
 
 then
 
-echo "Starting the configuration of Apache."
-
-echo "What is the domain name you are going to be using?
-"
+echo 'Starting the configuration of Apache.'
 
 chown www-data:www-data /var/www/nextcloud-data
 
