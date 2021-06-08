@@ -3,7 +3,7 @@
 #For Ubuntu 20.04
 #GNU General Public License v3.0
 
-echo "welcome to the nextcloud all-in-one installation script. "
+echo 'Welcome to the all-in-one installation script for NextCloud.'
 
 #update apt
 apt update -y
@@ -78,19 +78,19 @@ unzip -d $directory/nextcloud.zip /var/www/nextcloud/
 
 
 #Configuring MariaDB
-echo "Starting the configuration of MariaDb"
+echo 'Starting the configuration of MariaDb'
 
-echo "What should the database user be called? "
+echo 'What should the database user be called?'
 read -r username
 
-echo "Please enter a password."
+echo 'Please enter a password.'
 read -r password
 
-echo "Enter the desired database name."
+echo 'Enter the desired database name.'
 read -r database
 
 ##Creating the user and database. 
-echo "Creating the user and database."
+echo 'Creating the user and database.'
 sleep 2
 
 mysql -uroot -e "CREATE USER $username@localhost IDENTIFIED BY $password;"
@@ -98,8 +98,8 @@ mysql -uroot -e "CREATE DATABASE $database;"
 mysql -uroot -e "GRANT ALL PRIVILEGES ON $database.* TO '$username'@'localhost';" 
 mysql -uroot -e "FLUSH PRIVILEGES;" 
 
-echo "Finished creating the user and database "
-echo "The username = $username and the database = $database."
+echo 'Finished creating the user and database'
+echo 'The username = $username and the database = $database.'
 sleep 6
 
 #restart MariaDB
@@ -115,29 +115,40 @@ echo "Starting the configuration of Apache."
 echo "What is the domain name you are going to be using?
 "
 
+chown www-data:www-data /var/www/nextcloud-data
+
 touch /etc/apache2/sites-available/nextcloud.conf
 
-sed 's//<VirtualHost *:80>
-        DocumentRoot "/var/www/nextcloud"
-        ServerName '$domain'
+sed 's//<IfModule mod_ssl.c>
+    <VirtualHost *:443>
+        DocumentRoot /var/www/nextcloud/;
+        ServerName '$domain';
 
-        ErrorLog ${APACHE_LOG_DIR}/nextcloud.error
-        CustomLog ${APACHE_LOG_DIR}/nextcloud.access combined
 
         <Directory /var/www/nextcloud/>
-            Require all granted
-            Options FollowSymlinks MultiViews
+            Options +FollowSymlinks
             AllowOverride All
+            Require all granted
+                <IfModule mod_dav.c>
+                    Dav off
+                </IfModule>
+                SetEnv HOME /var/www/nextcloud
+                SetEnv HTTP_HOME /var/www/nextcloud
+        </Directory>
 
-           <IfModule mod_dav.c>
-               Dav off
-           </IfModule>
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
 
-        SetEnv HOME /var/www/nextcloud
-        SetEnv HTTP_HOME /var/www/nextcloud
-        Satisfy Any
+ServerAlias '$domain';
+Include /etc/letsencrypt/options-ssl-apache.conf
+SSLCertificateFile /etc/letsencrypt/live/'$domain'/fullchain.pem
+SSLCertificateKeyFile /etc/letsencrypt/live/'$domain'/privkey.pem
+</VirtualHost>
+</IfModule>
+<VirtualHost *:80>
+    ServerName '$domain';
 
-       </Directory>
+    Redirect / https://'$domain';
 
 </VirtualHost>/g' /etc/apache2/sites-available/nextcloud.conf
 
@@ -182,7 +193,7 @@ server {
     # Use Mozillas guidelines for SSL/TLS settings
     # https://mozilla.github.io/server-side-tls/ssl-config-generator/
     ssl_certificate     /etc/letsencrypt/live/'$domain'/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/'$domain'/privkey.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/'$domain'/privkey.pem;
 
     # HSTS settings
     # WARNING: Only add the preload option once you read about
@@ -316,9 +327,9 @@ server {
     }
 }/g' /etc/nginx/sites-available/nextcloud.conf
 
-ln -s /etc/nginx/sites-available/nextcloud.conf
-
 certbot certonly --nginx -d $domain
+
+ln -s /etc/nginx/sites-available/nextcloud.conf /etc/nginx/sites-enabled/nextcloud.conf
 
 systemctl restart nginx
 
@@ -330,7 +341,7 @@ iptables -I INPUT -p tcp --dport 443 -j ACCEPT
 
 #Start NextCloud configuration. 
 echo "Starting configuration of NextCloud."
-echo "go to http://$domain"
+echo "go to https://$domain"
 
 sleep 60
 
