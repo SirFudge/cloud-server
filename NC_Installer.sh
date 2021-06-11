@@ -10,6 +10,34 @@ apt update -y
 
 #install Php7.4 MariaDB and certbot
 echo 'Installing PHP7.4, MariaDB and Certbot.'
+echo "Do you want to continue? Y/N"
+read yesno1
+
+while [[ "$yesno1" == 'no' ]] || [[ "$yesno1" == 'No' ]]
+
+do
+
+echo "Do you want to quit?"
+read qyesno1
+
+if  [[ "$qyesno1" == 'yes' ]] || [[ "$qyesno1" == 'Yes' ]]
+
+then
+
+echo "Stopping the installation script."
+exit 0
+
+elif [[ "$qyesno1" == 'no' ]] || [[ "$qyesno1" == 'No' ]]
+
+then
+
+echo "Are you ready to continue? Y/N"
+read yesno1
+
+fi
+
+done
+
 
 apt -y install php7.4 php7.4-{cli,gd,mysql,pdo,mbstring,tokenizer,bcmath,xml,fpm,curl,zip}
 
@@ -19,6 +47,34 @@ systemctl start mariadb
 systemctl enable mariadb
 
 #webserver installation choice.
+echo "About to pick a webserver, do you want to continue? Y/N"
+read yesno2
+
+while [[ "$yesno2" == 'no' ]] || [[ "$yesno2" == 'No' ]]
+
+do
+
+echo "Do you want to quit?"
+read qyesno2
+
+if  [[ "$qyesno2" == 'yes' ]] || [[ "$qyesno2" == 'Yes' ]]
+
+then
+
+echo "Stopping the installation script."
+exit 0
+
+elif [[ "$qyesno2" == 'no' ]] || [[ "$qyesno2" == 'No' ]]
+
+then
+
+echo "About to pick a webserver, do you want to continue? Y/N"
+read yesno2
+
+fi
+
+done
+
 
 echo 'Choose a webserver, Apache or Nginx'
 sleep 3
@@ -61,6 +117,34 @@ fi
 apt-get install -y unzip
 
 #install nextcloud
+echo "starting installation nextcloud, do you want to continue? Y/N"
+read yesno3
+
+while [[ "$yesno3" == 'no' ]] || [[ "$yesno3" == 'No' ]]
+
+do
+
+echo "Do you want to quit?"
+read qyesno3
+
+if  [[ "$qyesno3" == 'yes' ]] || [[ "$qyesno3" == 'Yes' ]]
+
+then
+
+echo "Stopping the installation script."
+exit 0
+
+elif [[ "$qyesno3" == 'no' ]] || [[ "$qyesno3" == 'No' ]]
+
+then
+
+echo "starting installation nextcloud, do you want to continue? Y/N"
+read yesno3
+
+fi
+
+done
+
 echo 'Installation of NextCloud starting'
 sleep 3
 
@@ -337,9 +421,22 @@ systemctl restart nginx
 
 fi
 
-#Firewall enable and rules
-iptables -I INPUT -p tcp --dport 80 -j fastcgi_intercept_errors
-iptables -I INPUT -p tcp --dport 443 -j ACCEPT
+#Enable firewall and rules. 
+iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+#Allow SSH.
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+##Allow http.
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+##Allow https. 
+iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+##Drop default rules
+iptables -P INPUT DROP 
+##Save rules
+iptables-save > /etc/iptables/rules.v4
+##Make loading of rules automatic. 
+apt-get install iptables-persistent
+
+wait -n
 
 #Start NextCloud configuration. 
 echo "Starting configuration of NextCloud."
@@ -375,6 +472,15 @@ read yesno
 fi
 
 done
+
+#Install fail2ban. 
+apt install fail2ban
+##Configuring fail2ban. 
+cp /etc/fail2ban/jail.{conf,local}
+
+sed -i 's/#ignoreip = 127.0.0.1/8 ::1/ignoreip = 127.0.0.1/8 ::1/g' /etc/fail2ban/jail.local
+
+systemctl restart fail2ban
 
 #Final message
 echo "All application have been installed and the basic security configurations have been set, the script will now stop."
