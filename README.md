@@ -7,3 +7,5 @@ Make executable with: sudo chmod +x /download/location/installation.sh
 Execute with: sudo /download/location/installation.sh
 
 Features:
+  Stop the installer
+  Pick a between Apache2 and Nginx
