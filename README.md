@@ -9,3 +9,4 @@ Execute with: sudo /download/location/installation.sh
 Features:
   Stop the installer
   Pick a between Apache2 and Nginx
+  Messages
