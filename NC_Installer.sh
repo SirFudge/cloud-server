@@ -1,9 +1,11 @@
 #NextCloud installation script. 
-#Made by Joey Nijsten/SirFudge
+#Made by SirFudge
 #For Ubuntu 20.04
+#Branch Bugs
 #GNU General Public License v3.0
 
 echo 'Welcome to the all-in-one installation script for NextCloud.'
+echo 'This is a Bug Branch, beware!'
 
 #update apt
 apt update -y
