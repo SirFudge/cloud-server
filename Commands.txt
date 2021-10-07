@@ -1,0 +1,19 @@
+# Vul in eigen woorden aan wat de commando, die hieronder staan, doen:
+
+
+
+#git status = show what files haven't been commited?
+
+#git init = Make's an existing folder into a repo
+
+#git diff = Show the deferences between branches
+
+#git reset = empty the staging area, rewrite working tree.
+
+#git rm = Remove a file from the repo
+
+#git log = Show the commits made to the repo
+
+#git stash = Save changes
+
+
